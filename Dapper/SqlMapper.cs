@@ -3227,7 +3227,12 @@ namespace Dapper
                 var types = new Type[length];
                 for (int i = startBound; i < startBound + length; i++)
                 {
+                    //types[i - startBound] = reader.GetFieldType(i);
+#if !NETSTANDARD1_3
+                    types[i - startBound] = (Type)reader.GetSchemaTable().Rows[i][System.Data.Common.SchemaTableColumn.DataType];
+#else
                     types[i - startBound] = reader.GetFieldType(i);
+#endif
                 }
 
                 var explicitConstr = typeMap.FindExplicitConstructor();
